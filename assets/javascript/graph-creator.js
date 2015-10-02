@@ -58,7 +58,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
          .append('svg:path')
          .attr('d', 'M0,-5L10,0L0,5');*/
 
-        // define arrow markers for leading arrow
+        // define arrow markers for leading arrow during adding
         defs.append('svg:marker')
                 .attr('id', 'mark-end-arrow')
                 .attr('viewBox', '0 -5 10 10')
@@ -112,18 +112,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
             thisGraph.svgMouseUp.call(thisGraph, d);
         });
 
-        //change node color
-        $("#color-palette").on('move.spectrum', function (e, tinycolor) {
 
-            globalColor = $("#color-palette").spectrum("get").toName();
-            if (thisGraph.state.selectedNode !== null) {
-                $('.conceptG.selected circle').css('fill', $("#color-palette").spectrum("get").toName());
-
-            }
-            else if (thisGraph.state.selectedEdge !== null) {
-                $('path.link.selected').css('stroke', $("#color-palette").spectrum("get").toName());
-            }
-        });
         // listen for dragging
         var dragSvg = d3.behavior.zoom()
                 .on("zoom", function () {
@@ -153,7 +142,18 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         window.onresize = function () {
             thisGraph.updateWindow(svg);
         };
+        //change node color
+        $("#color-palette").on('move.spectrum', function (e, tinycolor) {
 
+            globalColor = $("#color-palette").spectrum("get").toName();
+            if (thisGraph.state.selectedNode !== null) {
+                $('.conceptG.selected circle').css('fill', globalColor);
+
+            }
+            else if (thisGraph.state.selectedEdge !== null) {
+                $('path.link.selected').css('stroke', globalColor);
+            }
+        });
         // handle download data
         d3.select("#download-input").on("click", function () {
 
@@ -219,7 +219,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                 }
             },
             {
-                title: 'Size +',
+                title: 'Radius +',
                 action: function (elm, d, i) {
 
 
@@ -232,7 +232,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
             }
             ,
             {
-                title: 'Size -',
+                title: 'Radius -',
                 action: function (elm, d, i) {
 
                     var currR = parseInt(elm.getAttribute("r"));
@@ -241,7 +241,40 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                         thisGraph.updateGraph();
                     }
                 }
+            },
+            {
+                title: 'Font Size +',
+                action: function (elm, d, i) {
+                    //console.log(elm.parentNode);
+                    var currF = parseInt((elm.parentNode.childNodes[1]).getAttribute("font-size"));
+                    //console.log(currF);
+                    if(isNaN(currF)){
+                        (elm.parentNode.childNodes[1]).setAttribute("font-size", 20);
+                        thisGraph.updateGraph();
+                    }
+                    else if (currF < 200) {
+                        (elm.parentNode.childNodes[1]).setAttribute("font-size", currF + 5);
+                        thisGraph.updateGraph();
+                    }
+                }
             }
+            ,
+            {
+                title: 'Font Size -',
+                action: function (elm, d, i) {
+
+                    var currF = parseInt((elm.parentNode.childNodes[1]).getAttribute("font-size"));
+                    if(isNaN(currF)){
+                        (elm.parentNode.childNodes[1]).setAttribute("font-size", 15);
+                        thisGraph.updateGraph();
+                    }
+                    else if (currF > 15) {
+                        (elm.parentNode.childNodes[1]).setAttribute("font-size", currF - 5);
+                        thisGraph.updateGraph();
+                    }
+                }
+            }
+
         ];
         // handle delete graph
         d3.select("#delete-graph").on("click", function () {
@@ -548,6 +581,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                 if (d3.event.shiftKey) {
                     // shift-clicked node: edit text content
                     var d3txt = thisGraph.changeTextOfNode(d3node, d);
+
                     var txtNode = d3txt.node();
                     thisGraph.selectElementContents(txtNode);
                     txtNode.focus();
@@ -672,7 +706,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     var currR = parseInt(($('.conceptG.selected circle')[0]).getAttribute("r"));
                     if (currR > 20) {
                         target[0].setAttribute("r", currR - 5);
-                        hisGraph.updateGraph();
+                        thisGraph.updateGraph();
                     }
                 }
                 break;

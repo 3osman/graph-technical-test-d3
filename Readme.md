@@ -29,11 +29,10 @@ Choose Default Color: you can set a default color from the color palette <br />
 Change Node Color: Select a node and change color from color palette<br />
 Change Link Color: Select a link and change color from color palette <br />
 Change Node Size: choose node and click on shift and + to enlarge and shift and – to shrink or using right click and choosing from contextual menu<br />
-Change Text Size <br />
+Change Text Size: right click on node and choose font size + or - <br />
 
 Bugs and To-dos <br />
 
 Save/Open Graph saves only the layout without colors and sizes (default colors and sizes) <br />
 Adding arrows svg <br />
 Highlight Nodes and Links <br />
-Change text size <br />
