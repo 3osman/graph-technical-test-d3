@@ -1,0 +1,153 @@
+body{
+    margin: 0;
+    padding: 0;
+    overflow:hidden;
+}
+
+p{ 
+     text-align: center; 
+     overflow: overlay;
+     position: relative;
+}
+
+body{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: rgb(248, 248, 248)
+}
+
+#toolbox{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+    border: 2px solid #EEEEEE;
+    border-radius: 5px;
+    padding: 1em;
+    z-index: 5;
+}
+
+#toolbox input{
+    width: 30px;
+    height: 30px;
+    opacity: 0.4;
+}
+#toolbox input:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+#toolboxs{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    top: 5px;
+    width: 190px;
+    height: 30px;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+    border: 2px solid #EEEEEE;
+    border-radius: 5px;
+    padding: 1em;
+    z-index: 5;
+}
+
+#toolboxs input{
+    opacity: 0.4;
+}
+#toolboxs input:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+
+#hidden-file-upload{
+    display: none;
+}
+
+#delete-graph{
+    margin: 0 0.5em;
+}
+
+#upload-input{
+    margin: 0 0.5em;
+}
+#add-node-button{
+    width: 30px;
+    height: 30px;
+    margin: 0 0.4em;
+}
+#zoom-in{
+    width: 30px;
+    height: 30px;
+}
+
+#zoom-out{
+    width: 30px;
+    height: 30px;
+    margin: 0 0.4em;
+}
+.sp-replacer:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+.sp-replacer{
+    opacity: 0.4;
+    width:45px;
+    margin-bottom: 22px;
+    margin-left: 10px;
+    
+}
+
+.conceptG text{
+    pointer-events: none;
+}
+
+marker{
+    fill: #333;
+}
+
+g.conceptG circle{
+    
+    stroke: #333;
+    stroke-width: 1px;
+}
+
+g.conceptG:hover circle{
+    opacity:0.7;
+    //fill: rgb(200, 238, 241);
+}
+
+g.selected circle{
+    opacity:1.2;
+    stroke-width: 4px;
+}
+g.selected:hover circle{
+    opacity:0.7;
+}
+
+path.link {
+    fill: none;
+    stroke: #333;
+    stroke-width: 6px;
+    cursor: default;
+}
+
+path.link:hover{
+    stroke: rgb(94, 196, 204);
+}
+
+g.connect-node circle{
+    fill: #BEFFFF;
+}
+
+path.link.hidden{
+    stroke-width: 0;
+}
+
+path.link.selected {
+    stroke: rgb(229, 172, 247);
+}

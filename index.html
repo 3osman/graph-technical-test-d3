@@ -1,0 +1,58 @@
+
+<html>
+    <head>
+
+        <link rel="stylesheet" href="assets/css/graph-creator.css" />
+        <link rel='stylesheet' href="assets/css/spectrum.css" />
+
+
+    </head>
+
+    <body>
+
+
+        <div id="graph">
+            <div id="toolboxs">
+
+                <input id="add-node-button" type="image" title="Add Node" src="assets/images/add-icon.png" alt="Add Node">
+                <input class="zooming" id="zoom-in" type="image" title="Zoom In" src="assets/images/zoom-in.png" alt="Zoom In">
+                <input class="zooming" id="zoom-out" type="image" title="Zoom Out" src="assets/images/zoom-out.png" alt="Zoom Out">
+                <input type='text' id="color-palette" value='red' />
+
+            </div>
+            <div id="toolbox">
+                <input type="file" id="hidden-file-upload">
+                <input id="upload-input" type="image" title="Open Graph" src="assets/images/upload-icon.png" alt="Open graph">
+                <input type="image" id="download-input" title="Save Graph" src="assets/images/download-icon.png" alt="Save Graph">
+                <input type="image" id="delete-graph" title="Delete Graph" src="assets/images/trash-icon.png" alt="Delete Graph">
+
+            </div>
+        </div>
+
+        <script src="assets/javascript/jquery.min.js"></script>
+        <script src="assets/javascript/bootstrap.min.js"></script>
+        <script src="assets/javascript/d3.v3.js" charset="utf-8"></script>
+        <script src="assets/javascript/FileSaver.min.js"></script>
+        <script src="assets/javascript/graph-creator.js"></script>
+        <script src="assets/javascript/spectrum.js"></script>
+        <script>
+            $("#color-palette").spectrum({
+                showButtons: false,
+                preferredFormat: "rgb",
+                showPaletteOnly: true,
+                showPalette: true,
+                palette: [
+                    ['red',  'blue', 'orange'],
+                    ['yellow', 'white','green']
+                        
+                ]
+            });
+           
+
+
+        </script>
+
+    </body>
+
+
+</html>
