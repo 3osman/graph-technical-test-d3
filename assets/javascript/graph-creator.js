@@ -1,5 +1,6 @@
 var globalColor = "red";
 var nodesLinks = [];
+var menu = [];
 
 document.onload = (function (d3, saveAs, Blob, undefined) {
     "use strict";
@@ -35,26 +36,27 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
 
         // define arrow markers for graph links
         var defs = svg.append('svg:defs');
-        defs.append('svg:marker')
-                .attr('id', 'end-arrow')
-                .attr('viewBox', '0 -5 10 10')
-                .attr('refX', "32")
-                .attr('markerWidth', 4)
-                .attr('markerHeight', 4)
-                .attr('orient', 'auto')
-                .append('svg:path')
-                .attr('d', 'M0,-5L10,0L0,5');
-        // define fixed arrow marker
-        var defs = svg.append('svg:defs');
-        defs.append('svg:marker')
-                .attr('id', 'start-arrow')
-                .attr('viewBox', '0 -5 10 10')
-                .attr('refX', "32")
-                .attr('markerWidth', 4)
-                .attr('markerHeight', 4)
-                .attr('orient', 'auto-start-reverse')
-                .append('svg:path')
-                .attr('d', 'M0,-5L10,0L0,5');
+        //TO-DO markers
+        /* defs.append('svg:marker')
+         .attr('id', 'end-arrow')
+         .attr('viewBox', '0 -5 10 10')
+         .attr('refX', "40")
+         .attr('markerWidth', 3)
+         .attr('markerHeight', 3)
+         .attr('orient', 'auto')
+         .append('svg:path')
+         .attr('d', 'M0,-5L10,0L0,5');
+         // define fixed arrow marker
+         var defs = svg.append('svg:defs');
+         defs.append('svg:marker')
+         .attr('id', 'start-arrow')
+         .attr('viewBox', '0 -5 10 10')
+         .attr('refX', "20")
+         .attr('markerWidth', 3)
+         .attr('markerHeight', 3)
+         .attr('orient', 'auto-start-reverse')
+         .append('svg:path')
+         .attr('d', 'M0,-5L10,0L0,5');*/
 
         // define arrow markers for leading arrow
         defs.append('svg:marker')
@@ -204,7 +206,43 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
             }
 
         });
+        //handle contextual menu
+        menu = [
+            {
+                title: 'Delete',
+                action: function (elm, d, i) {
+                    thisGraph.nodes.splice(thisGraph.nodes.indexOf(d), 1);
+                    thisGraph.spliceLinksForNode(d);
+                    thisGraph.state.selectedNode = null;
+                    thisGraph.updateGraph();
+                    d3.select('.d3-context-menu').style('display', 'none');
+                }
+            },
+            {
+                title: 'Size +',
+                action: function (elm, d, i) {
 
+
+                    var currR = parseInt(elm.getAttribute("r"));
+                    if (currR < 150) {
+                        elm.setAttribute("r", currR + 5);
+                        thisGraph.updateGraph();
+                    }
+                }
+            }
+            ,
+            {
+                title: 'Size -',
+                action: function (elm, d, i) {
+
+                    var currR = parseInt(elm.getAttribute("r"));
+                    if (currR > 20) {
+                        elm.setAttribute("r", currR - 5);
+                        thisGraph.updateGraph();
+                    }
+                }
+            }
+        ];
         // handle delete graph
         d3.select("#delete-graph").on("click", function () {
             thisGraph.deleteGraph(false);
@@ -281,6 +319,8 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         activeEditId: "active-editing",
         BACKSPACE_KEY: 8,
         DELETE_KEY: 46,
+        PLUS_KEY: 187,
+        MINUS_KEY: 189,
         ENTER_KEY: 13,
         nodeRadius: 50
     };
@@ -593,6 +633,7 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         switch (d3.event.keyCode) {
             case consts.BACKSPACE_KEY:
             case consts.DELETE_KEY:
+
                 d3.event.preventDefault();
                 if (selectedNode) {
                     thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
@@ -610,6 +651,29 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
                     state.selectedEdge = null;
                     thisGraph.updateGraph();
+                }
+                break;
+            case consts.PLUS_KEY:
+                d3.event.preventDefault();
+                if (selectedNode && d3.event.shiftKey) {
+                    var target = $('.conceptG.selected circle')
+                    var currR = parseInt(($('.conceptG.selected circle')[0]).getAttribute("r"));
+                    if (currR < 150) {
+                        target[0].setAttribute("r", currR + 5);
+                        thisGraph.updateGraph();
+                    }
+
+                }
+                break;
+            case consts.MINUS_KEY:
+                d3.event.preventDefault();
+                if (selectedNode && d3.event.shiftKey) {
+                    var target = $('.conceptG.selected circle')
+                    var currR = parseInt(($('.conceptG.selected circle')[0]).getAttribute("r"));
+                    if (currR > 20) {
+                        target[0].setAttribute("r", currR - 5);
+                        hisGraph.updateGraph();
+                    }
                 }
                 break;
         }
@@ -637,10 +701,11 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                 })
                 .attr("d", function (d) {
                     // console.log("NodesLinks before update:" + nodesLinks);
-                    var x = d.source.x + 10;
-                    var y = d.source.y + 10;
-                    var xx = d.target.x + 10;
-                    var yy = d.target.y + 10;
+                    var x = d.source.x + 20;
+                    var y = d.source.y + 20;
+                    var xx = d.target.x + 20;
+                    var yy = d.target.y + 20;
+
                     var found = $.inArray("(" + d.source.id + "),(" + d.target.id + ")", nodesLinks) > -1;
                     var opFound = $.inArray("(" + d.target.id + "),(" + d.source.id + ")", nodesLinks) > -1;
 
@@ -649,10 +714,10 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
 
                         // console.log("inside add");
                     } else if (opFound) {
-                        x = d.source.x - 10;
-                        y = d.source.y - 10;
-                        xx = d.target.x - 10;
-                        yy = d.target.y - 10;
+                        x = d.source.x - 20;
+                        y = d.source.y - 20;
+                        xx = d.target.x - 20;
+                        yy = d.target.y - 20;
                     }
 
 
@@ -667,10 +732,10 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                 .style('stroke', globalColor)
                 .classed("link", true)
                 .attr("d", function (d) {
-                    var x = d.source.x + 10;
-                    var y = d.source.y + 10;
-                    var xx = d.target.x + 10;
-                    var yy = d.target.y + 10;
+                    var x = d.source.x + 20;
+                    var y = d.source.y + 20;
+                    var xx = d.target.x + 20;
+                    var yy = d.target.y + 20;
                     //console.log("(" + d.source.x + "," + d.source.y + "),(" + d.target.x + "," + d.target.y + ")");
                     //console.log($.inArray(d, thisGraph.edges) > -1);
 
@@ -685,14 +750,14 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     }
                     else {
 
-                        x = d.source.x - 10;
-                        y = d.source.y - 10;
-                        xx = d.target.x - 10;
-                        yy = d.target.y - 10;
+                        x = d.source.x - 20;
+                        y = d.source.y - 20;
+                        xx = d.target.x - 20;
+                        yy = d.target.y - 20;
                     }
 
 
-                    //console.log(x+","+y);
+                    //console.log(x + "," + y + "," + xx + "," + yy);
                     found = false;
                     opFound = false;
                     nodesLinks = [];
@@ -743,7 +808,8 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                 .call(thisGraph.drag);
         newGs.append("circle")
                 .attr("r", String(consts.nodeRadius))
-                .attr("fill", globalColor);
+                .attr("fill", globalColor)
+                .on('contextmenu', d3.contextMenu(menu));
 
         newGs.each(function (d) {
             thisGraph.insertTitleLinebreaks(d3.select(this), d.title);
