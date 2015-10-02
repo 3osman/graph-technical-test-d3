@@ -29,7 +29,5 @@ Change Text Size <br />
 
 Bugs and To-dos <br />
 
-To add a second link between two nodes, you have to choose the first target as source <br />
 Save/Open Graph saves only the layout without colors and sizes (default colors and sizes) <br />
-Multi-links small bug: on adding a second multilink <br />
 Arrows problem

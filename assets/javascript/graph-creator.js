@@ -474,9 +474,11 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         if (mouseDownNode !== d) {
             // we're in a different node: create new edge for mousedown edge and add to graph
             var newEdge = {source: mouseDownNode, target: d, linkindex: 1};
+            var founOpp = false;
             var filtRes = thisGraph.paths.filter(function (d) {
                 if (d.source === newEdge.target && d.target === newEdge.source) {
                     newEdge.linkindex = d.linkindex + 1;
+                    founOpp = true;
 
                     //thisGraph.edges.splice(thisGraph.edges.indexOf(d), 1);
                 }
@@ -485,6 +487,11 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
             });
             if (!filtRes[0].length) {
                 thisGraph.edges.push(newEdge);
+                thisGraph.updateGraph();
+            }
+            else if (!founOpp) {
+                var secEdge = {source: d, target: mouseDownNode, linkindex: d.linkindex + 1};
+                thisGraph.edges.push(secEdge);
                 thisGraph.updateGraph();
             }
             //console.log(newEdge);
@@ -629,18 +636,14 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     return d === state.selectedEdge;
                 })
                 .attr("d", function (d) {
-                   // console.log("NodesLinks before update:" + nodesLinks);
+                    // console.log("NodesLinks before update:" + nodesLinks);
                     var x = d.source.x + 10;
                     var y = d.source.y + 10;
                     var xx = d.target.x + 10;
                     var yy = d.target.y + 10;
                     var found = $.inArray("(" + d.source.id + "),(" + d.target.id + ")", nodesLinks) > -1;
                     var opFound = $.inArray("(" + d.target.id + "),(" + d.source.id + ")", nodesLinks) > -1;
-                    //console.log("found same:" + found);
-                    //console.log("found opp:" + opFound);
-                    //console.log("found same:" + found);
-                    //console.log("found opp:" + opFound);
-                    //console.log(d.source);
+
                     if (!found && !opFound) {
                         nodesLinks.push("(" + d.source.id + "),(" + d.target.id + ")");
 
@@ -669,23 +672,26 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     var xx = d.target.x + 10;
                     var yy = d.target.y + 10;
                     //console.log("(" + d.source.x + "," + d.source.y + "),(" + d.target.x + "," + d.target.y + ")");
+                    //console.log($.inArray(d, thisGraph.edges) > -1);
+
                     var found = $.inArray("(" + d.source.id + "),(" + d.target.id + ")", nodesLinks) > -1;
                     var opFound = $.inArray("(" + d.target.id + "),(" + d.source.id + ")", nodesLinks) > -1;
-
+                    //console.log("before: " + d.source.id + "," + d.target.id);
+                    //console.log(found);
+                    // console.log(nodesLinks);
                     if (!found && !opFound) {
                         nodesLinks.push("(" + d.source.id + "),(" + d.target.id + ")");
 
-                        // console.log("inside add");
                     }
                     else {
-                        //console.log("inside else add");
-                        //nodesLinks.push("(" + d.target.x + "," + d.target.y + "),(" + d.source.x + "," + d.source.y + ")");
 
                         x = d.source.x - 10;
                         y = d.source.y - 10;
                         xx = d.target.x - 10;
                         yy = d.target.y - 10;
                     }
+
+
                     //console.log(x+","+y);
                     found = false;
                     opFound = false;
