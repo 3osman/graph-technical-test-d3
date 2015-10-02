@@ -1,9 +1,6 @@
 var globalColor = "red";
-$("#color-palette").on('move.spectrum', function (e, tinycolor) {
+var nodesLinks = [];
 
-    console.log($("#color-palette").spectrum("get").toName());
-    globalColor = $("#color-palette").spectrum("get").toName();
-});
 document.onload = (function (d3, saveAs, Blob, undefined) {
     "use strict";
 
@@ -41,9 +38,9 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         defs.append('svg:marker')
                 .attr('id', 'end-arrow')
                 .attr('viewBox', '0 -5 10 10')
-                .attr('refX', "37")
-                .attr('markerWidth', 3)
-                .attr('markerHeight', 3)
+                .attr('refX', "32")
+                .attr('markerWidth', 4)
+                .attr('markerHeight', 4)
                 .attr('orient', 'auto')
                 .append('svg:path')
                 .attr('d', 'M0,-5L10,0L0,5');
@@ -52,9 +49,9 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         defs.append('svg:marker')
                 .attr('id', 'start-arrow')
                 .attr('viewBox', '0 -5 10 10')
-                .attr('refX', "27")
-                .attr('markerWidth', 3)
-                .attr('markerHeight', 3)
+                .attr('refX', "32")
+                .attr('markerWidth', 4)
+                .attr('markerHeight', 4)
                 .attr('orient', 'auto-start-reverse')
                 .append('svg:path')
                 .attr('d', 'M0,-5L10,0L0,5');
@@ -113,6 +110,18 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
             thisGraph.svgMouseUp.call(thisGraph, d);
         });
 
+        //change node color
+        $("#color-palette").on('move.spectrum', function (e, tinycolor) {
+
+            globalColor = $("#color-palette").spectrum("get").toName();
+            if (thisGraph.state.selectedNode !== null) {
+                $('.conceptG.selected circle').css('fill', $("#color-palette").spectrum("get").toName());
+
+            }
+            else if (thisGraph.state.selectedEdge !== null) {
+                $('path.link.selected').css('stroke', $("#color-palette").spectrum("get").toName());
+            }
+        });
         // listen for dragging
         var dragSvg = d3.behavior.zoom()
                 .on("zoom", function () {
@@ -584,6 +593,13 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     state.selectedNode = null;
                     thisGraph.updateGraph();
                 } else if (selectedEdge) {
+                    //console.log("(" + selectedEdge.source.id + "),(" + selectedEdge.target.id + ")");
+                    var index = nodesLinks.indexOf("(" + selectedEdge.source.id + "),(" + selectedEdge.target.id + ")");
+
+
+                    if (index > -1) {
+                        nodesLinks.splice(index, 1);
+                    }
                     thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
                     state.selectedEdge = null;
                     thisGraph.updateGraph();
@@ -608,32 +624,35 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
         });
         var paths = thisGraph.paths;
         // update existing paths
-        var nodesLinks = [];
         paths.style('marker-end', 'url(#end-arrow)')
                 .classed(consts.selectedClass, function (d) {
                     return d === state.selectedEdge;
                 })
                 .attr("d", function (d) {
+                   // console.log("NodesLinks before update:" + nodesLinks);
                     var x = d.source.x + 10;
                     var y = d.source.y + 10;
                     var xx = d.target.x + 10;
                     var yy = d.target.y + 10;
-                    //var found = false;
-                    var found = $.inArray(d.source + "," + d.target, nodesLinks) > -1;
-                    var opFound = $.inArray(d.target + "," + d.source, nodesLinks) > -1;
-                    //console.log(nodesLinks.length);
-
+                    var found = $.inArray("(" + d.source.id + "),(" + d.target.id + ")", nodesLinks) > -1;
+                    var opFound = $.inArray("(" + d.target.id + "),(" + d.source.id + ")", nodesLinks) > -1;
+                    //console.log("found same:" + found);
+                    //console.log("found opp:" + opFound);
+                    //console.log("found same:" + found);
+                    //console.log("found opp:" + opFound);
+                    //console.log(d.source);
                     if (!found && !opFound) {
-                        nodesLinks.push(d.source + "," + d.target);
+                        nodesLinks.push("(" + d.source.id + "),(" + d.target.id + ")");
+
                         // console.log("inside add");
-                    }
-                    else {
-                        //console.log("inside else add");
+                    } else if (opFound) {
                         x = d.source.x - 10;
                         y = d.source.y - 10;
                         xx = d.target.x - 10;
                         yy = d.target.y - 10;
                     }
+
+
 
                     return "M" + x + "," + y + "L" + xx + "," + yy;
                 });
@@ -642,27 +661,35 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                 .append("path")
                 .style('marker-end', 'url(#end-arrow)')
                 .style('marker-start', 'url(#start-arrow)')
+                .style('stroke', globalColor)
                 .classed("link", true)
                 .attr("d", function (d) {
                     var x = d.source.x + 10;
                     var y = d.source.y + 10;
                     var xx = d.target.x + 10;
                     var yy = d.target.y + 10;
-                    var found = $.inArray(d.source + "," + d.target, nodesLinks) > -1;
-                    var opFound = $.inArray(d.target + "," + d.source, nodesLinks) > -1;
+                    //console.log("(" + d.source.x + "," + d.source.y + "),(" + d.target.x + "," + d.target.y + ")");
+                    var found = $.inArray("(" + d.source.id + "),(" + d.target.id + ")", nodesLinks) > -1;
+                    var opFound = $.inArray("(" + d.target.id + "),(" + d.source.id + ")", nodesLinks) > -1;
 
                     if (!found && !opFound) {
-                        nodesLinks.push(d.source + "," + d.target);
+                        nodesLinks.push("(" + d.source.id + "),(" + d.target.id + ")");
+
                         // console.log("inside add");
                     }
                     else {
                         //console.log("inside else add");
+                        //nodesLinks.push("(" + d.target.x + "," + d.target.y + "),(" + d.source.x + "," + d.source.y + ")");
+
                         x = d.source.x - 10;
                         y = d.source.y - 10;
                         xx = d.target.x - 10;
                         yy = d.target.y - 10;
                     }
                     //console.log(x+","+y);
+                    found = false;
+                    opFound = false;
+                    nodesLinks = [];
 
                     return "M" + x + "," + y + "L" + xx + "," + yy;
                 })
@@ -708,7 +735,6 @@ document.onload = (function (d3, saveAs, Blob, undefined) {
                     thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
                 })
                 .call(thisGraph.drag);
-        console.log(globalColor);
         newGs.append("circle")
                 .attr("r", String(consts.nodeRadius))
                 .attr("fill", globalColor);

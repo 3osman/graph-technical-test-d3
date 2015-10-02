@@ -117,7 +117,7 @@ g.conceptG circle{
 }
 
 g.conceptG:hover circle{
-    opacity:0.7;
+    opacity:0.8;
     //fill: rgb(200, 238, 241);
 }
 
@@ -126,18 +126,18 @@ g.selected circle{
     stroke-width: 4px;
 }
 g.selected:hover circle{
-    opacity:0.7;
+    opacity:0.8;
 }
 
 path.link {
     fill: none;
     stroke: #333;
-    stroke-width: 6px;
+    stroke-width: 4px;
     cursor: default;
 }
 
 path.link:hover{
-    stroke: rgb(94, 196, 204);
+    opacity:0.8;
 }
 
 g.connect-node circle{
@@ -149,5 +149,6 @@ path.link.hidden{
 }
 
 path.link.selected {
-    stroke: rgb(229, 172, 247);
+    opacity:0.6;
+    //stroke: rgb(229, 172, 247);
 }

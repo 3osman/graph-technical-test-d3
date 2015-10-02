@@ -21,7 +21,15 @@ Using the buttons <br />
 Delete Graph: Using the button <br />
 Save Graph: Saves JSON file of the graph (default color and size, NEEDS WORKING) <br />
 Open Graph: Opens a saved graph (Default color and size, NEEDS WORKING) <br />
-Change Node Color <br />
-Change Link Color <br />
+Choose Default Color: you can set a default color from the color palette <br />
+Change Node Color: Select a node and change color from color palette<br />
+Change Link Color: Select a link and change color from color palette <br />
 Change Node Size <br />
 Change Text Size <br />
+
+Bugs and To-dos <br />
+
+To add a second link between two nodes, you have to choose the first target as source <br />
+Save/Open Graph saves only the layout without colors and sizes (default colors and sizes) <br />
+Multi-links small bug: on adding a second multilink <br />
+Arrows problem
